@@ -36,7 +36,7 @@ class rpcClient:
 				self.s.settimeout(time.time() - start + 2)
 				if not tmp: break
 				result += tmp
-				if len(tmp)%self.size != 0: break
+				#if len(tmp)%self.size != 0: break
 
 			#print '* Received :', '\n', result
 			self.s.close()
