@@ -230,10 +230,18 @@ class pluginNamespaceDomain(plugin.PluginThread):
 					return answers
 			return
 		elif reqtype == "TLSA":
-			port = qdict["domain"].split(".")[0][1:]
-			protocol = qdict["domain"].split(".")[1][1:]
+			if qdict["domain"].split(".")[0][0] == '_' and qdict["domain"].split(".")[1][0] == '_':
+				port = qdict["domain"].split(".")[0][1:]
+				protocol = qdict["domain"].split(".")[1][1:]
+			else:
+				if app['debug']: print "Wrong format for TLSA domain lookup :", qdict["domain"]
+				return
 			answers = app['plugins']['dns'].getTlsFingerprint(qdict["domain"], protocol, port)
-			answers = json.loads(answers)
+			try:	
+				answers = json.loads(answers)
+			except:
+				if app['debug']: traceback.print_exc()
+				return
 			return {"type":52, "class":1, "ttl":300, "data":answers}
 		return
 
